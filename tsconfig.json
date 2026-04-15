@@ -5,6 +5,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
+    "ignoreDeprecations": "6.0",
 
     // CRUCIAL: Permite importar de pastas sem index explícito se necessário
     "moduleResolution": "node",
@@ -18,8 +19,8 @@
     // Configura o Path Mapping para facilitar o import
     "baseUrl": ".",
     "paths": {
-      "@types": ["src/types/index.ts"], // Adicione esta linha para importar direto de '@types'
-      "@types/*": ["src/types/*"] // Mantém esta para importar arquivos específicos
+      "@types": ["src/types/index.ts"],
+      "@types/*": ["src/types/*"]
     }
   },
   "include": ["src/**/*"],
