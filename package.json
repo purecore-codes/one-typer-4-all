@@ -1,26 +1,22 @@
 {
-  "name": "one-typer-4-all",
+  "name": "1ntruder",
   "version": "0.1.0",
   "main": "index.js",
   "bin": {
-    "one-typer-4-all": "./src/cli.js",
-    "mytyper": "./src/cli.js",
-    "onetyper": "./src/cli.js",
-    "onetyper4all": "./src/cli.js"
+    "1ntruder": "./src/cli.js",
+    "intruder": "./src/cli.js"
   },
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "one-typer-4-all": "node ./src/cli.js",
-    "mytyper": "node ./src/cli.js",
-    "onetyper": "node ./src/cli.js",
-    "onetyper4all": "node ./src/cli.js"
+    "1ntruder": "node ./src/cli.js",
+    "intruder": "node ./src/cli.js"
   },
-  "keywords": [],
+  "keywords": ["pentesting", "security", "http", "scanner", "fuzzer"],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Advanced HTTP security scanner and pentesting toolkit",
   "devDependencies": {
     "jest": "^30.2.0",
     "typescript": "^6.0.2"
