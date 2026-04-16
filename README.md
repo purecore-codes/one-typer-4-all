@@ -63,6 +63,20 @@ npx 1ntruder recon https://site.com
 - **Batch Requests**: Execute multiple requests efficiently
 - **Pattern Matching**: Detect content anomalies and patterns
 
+## 🥊 1ntruder vs. O Mundo Legacy
+
+| Feature | **1ntruder** 🚀 | Nikto 🐢 | OWASP ZAP ☕ | Burp Suite 💰 |
+| :--- | :---: | :---: | :---: | :---: |
+| **HTTP Fuzzing Avançado** | ✅ **Nativo** | ❌ Básico | ✅ Sim | ✅ Sim |
+| **Tech Recon (25+ techs)** | ✅ **Auto** | ❌ Não | ⚠️ Plugin | ✅ Pro |
+| **CLI Nativo & Leve** | ✅ **< 1s** | ✅ Sim | ❌ GUI Focus | ❌ GUI Focus |
+| **Ecossistema Node.js** | ✅ **100%** | ❌ Perl | ❌ Java | ❌ Java |
+| **Extensível (JS/TS)** | ✅ **Fácil** | ❌ Difícil | ⚠️ Limitado | ❌ Complexo |
+| **CI/CD Ready** | ✅ **Zero Config** | ⚠️ Manual | ⚠️ Pesado | ❌ Pago |
+| **Output JSON Estruturado**| ✅ **Padrão** | ⚠️ Texto | ✅ Sim | ❌ Pago |
+| **Custom Payloads Dinâmicos**| ✅ **Smart** | ❌ Estático | ⚠️ Listas | ✅ Pro |
+| **Licença** | 🟢 **MIT (Free)** | 🟢 GPL | 🟢 Apache | 🔴 Comercial |
+
 ## 📦 Installation
 
 ```bash
