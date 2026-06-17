@@ -13,4 +13,12 @@ export { CveSummarizer, CveSummary, ReportOptions, DigestItem } from './cve-summ
 export { CveAlertSystem, AlertFilter, AlertCallback, CveAlert, MonitorConfig, MonitorState } from './cve-alert-system';
 
 // Dependency Scanner - Scan project dependencies for vulnerabilities
-export { DependencyScanner, DependencyInfo, VulnerableDependency, ScanOptions, ScanResult } from './dependency-scanner';
+export { DependencyScanner, DependencyInfo, VulnerableDependency, ScanOptions as DependencyScanOptions, ScanResult as DependencyScanResult } from './dependency-scanner';
+
+export {
+  analyzeCveForJsTsNode,
+  categorizeWeaknessText,
+  buildHeuristicPlan,
+  listKnownJsTsNodeWeaknessSignals,
+} from './cve-xploiter';
+export type { CveXploiterAnalysis, AtomicSignal, JsTsNodeWeaknessCategory, CveXploiterCveLike } from './cve-xploiter';
