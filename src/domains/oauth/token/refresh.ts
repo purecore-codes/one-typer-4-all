@@ -1,4 +1,4 @@
-import { AtomicType, BehaviorType } from "../../forge";
+import { AtomicType, BehaviorType } from "../../../forge";
 
 export type RefreshToken = AtomicType<string, "oauth.token.refresh">;
 

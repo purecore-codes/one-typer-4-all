@@ -33,10 +33,10 @@ export interface AdvancedHttpOptions extends AxiosRequestConfig {
 export class AdvancedHttpClient {
   private client: AxiosInstance;
   private requestLogs: RequestLog[] = [];
-  private options: AdvancedHttpOptions;
+  private clientOptions: AdvancedHttpOptions;
 
   constructor(options?: AdvancedHttpOptions) {
-    this.options = {
+    this.clientOptions = {
       logRequests: false,
       retryCount: 0,
       retryDelay: 1000,
@@ -47,8 +47,8 @@ export class AdvancedHttpClient {
     };
 
     this.client = axios.create({
-      timeout: this.options.timeout,
-      maxRedirects: this.options.followRedirects ? this.options.maxRedirects : 0,
+      timeout: this.clientOptions.timeout,
+      maxRedirects: this.clientOptions.followRedirects ? this.clientOptions.maxRedirects : 0,
       validateStatus: () => true,
       headers: {
         'User-Agent': '1ntruder-HTTPClient/1.0',
@@ -57,7 +57,7 @@ export class AdvancedHttpClient {
     });
 
     // Add request interceptor for logging
-    if (this.options.logRequests) {
+    if (this.clientOptions.logRequests) {
       this.setupLogging();
     }
 
@@ -110,7 +110,7 @@ export class AdvancedHttpClient {
    * Setup automatic retry logic
    */
   private setupRetryLogic(): void {
-    if (this.options.retryCount && this.options.retryCount > 0) {
+    if (this.clientOptions.retryCount && this.clientOptions.retryCount > 0) {
       this.client.interceptors.response.use(
         (response) => response,
         async (error) => {
@@ -123,7 +123,7 @@ export class AdvancedHttpClient {
 
           config.__retryCount = config.__retryCount || 0;
           
-          if (config.__retryCount >= this.options.retryCount!) {
+          if (config.__retryCount >= this.clientOptions.retryCount!) {
             return Promise.reject(error);
           }
 
@@ -131,7 +131,7 @@ export class AdvancedHttpClient {
           
           // Wait before retrying
           await new Promise(resolve => 
-            setTimeout(resolve, this.options.retryDelay)
+            setTimeout(resolve, this.clientOptions.retryDelay)
           );
 
           return this.client(config);

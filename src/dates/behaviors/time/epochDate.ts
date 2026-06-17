@@ -1,4 +1,4 @@
-import { Brand, STAMP } from "../../../src/semantic/shim";
+import { Brand, STAMP } from "../../../semantic/shim";
 
 export type EpochDate = Brand<number, "time.epochDate">;
 const f = STAMP<"time.epochDate">();

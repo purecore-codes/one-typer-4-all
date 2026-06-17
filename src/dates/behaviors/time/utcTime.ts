@@ -1,4 +1,4 @@
-import { Brand, STAMP } from "../../../src/semantic/shim";
+import { Brand, STAMP } from "../../../semantic/shim";
 
 export type UTCTime = Brand<Date, "time.utcTime">;
 const f = STAMP<"time.utcTime">();

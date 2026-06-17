@@ -11,10 +11,10 @@
     "intruder-cve": "./dist/cli-cve.js"
   },
   "scripts": {
-    "build": "tsc && node ./dist/cli.js --banner",
-    "prebuild": "node ./dist/cli.js --security-check || true",
+    "build": "tsc && cp src/cli.js dist/cli.js && cp src/cli-cve.js dist/cli-cve.js && node ./dist/cli.js --banner",
+    "prebuild": "node ./src/cli.js --security-check || true",
     "prepare": "npm run build",
-    "postinstall": "node ./dist/cli.js --welcome || true",
+    "postinstall": "node ./src/cli.js --welcome || true",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",

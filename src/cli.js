@@ -5,9 +5,101 @@
  * Executado automaticamente durante o build para verificar segurança
  */
 
-const axios = require('axios');
 const path = require('path');
 const fs = require('fs');
+
+const os = require('os');
+const USER_HOME = os.homedir();
+const GLOBAL_NAMESPACE = ".atomic_types";
+const PROJECT_ROOT = process.cwd();
+const SRC_DIR = path.join(PROJECT_ROOT, "src");
+const GLOBAL_SHARED_PATH = path.join(USER_HOME, GLOBAL_NAMESPACE, "shared");
+const LOCAL_TYPES_DIR = path.join(SRC_DIR, "types");
+const LOCAL_SHARED_LINK_DIR = path.join(LOCAL_TYPES_DIR, "shared");
+const INDEX_FILE = path.join(LOCAL_TYPES_DIR, "index.ts");
+
+function isInsideDirectory(parent, child) {
+  const relative = path.relative(parent, child);
+  return relative === '' || (!!relative && !relative.startsWith('..') && !path.isAbsolute(relative));
+}
+
+function ensureDir(dir) {
+  fs.mkdirSync(dir, { recursive: true });
+}
+
+function findFiles(dir, suffix, results = []) {
+  const resolvedDir = path.resolve(dir);
+  const resolvedSrc = path.resolve(SRC_DIR);
+
+  if (!isInsideDirectory(resolvedSrc, resolvedDir) || !fs.existsSync(resolvedDir)) {
+    return [];
+  }
+
+  for (const entry of fs.readdirSync(resolvedDir, { withFileTypes: true })) {
+    if (entry.name === 'node_modules') continue;
+    const fullPath = path.join(resolvedDir, entry.name);
+    if (entry.isSymbolicLink()) continue;
+    if (entry.isDirectory()) {
+      findFiles(fullPath, suffix, results);
+    } else if (entry.isFile() && entry.name.endsWith(suffix)) {
+      results.push(fullPath);
+    }
+  }
+
+  return results;
+}
+
+function harvestTypes() {
+  ensureDir(GLOBAL_SHARED_PATH);
+  const files = findFiles(SRC_DIR, '.type.ts');
+  const harvested = [];
+
+  for (const file of files) {
+    const fileName = path.basename(file);
+    if (fileName.includes('..') || path.isAbsolute(fileName)) continue;
+    const destination = path.join(GLOBAL_SHARED_PATH, fileName);
+    if (!isInsideDirectory(GLOBAL_SHARED_PATH, destination)) continue;
+    fs.copyFileSync(file, destination);
+    harvested.push(fileName);
+  }
+
+  return harvested;
+}
+
+function linkTypes() {
+  ensureDir(LOCAL_SHARED_LINK_DIR);
+  if (!fs.existsSync(GLOBAL_SHARED_PATH)) return [];
+
+  const exportLines = [];
+  for (const fileName of fs.readdirSync(GLOBAL_SHARED_PATH)) {
+    if (!fileName.endsWith('.type.ts') || fileName.includes('..') || path.isAbsolute(fileName)) continue;
+    const source = path.join(GLOBAL_SHARED_PATH, fileName);
+    if (!isInsideDirectory(GLOBAL_SHARED_PATH, source)) continue;
+    const linkPath = path.join(LOCAL_SHARED_LINK_DIR, fileName);
+    if (!isInsideDirectory(LOCAL_SHARED_LINK_DIR, linkPath)) continue;
+
+    try {
+      if (fs.existsSync(linkPath)) fs.unlinkSync(linkPath);
+      fs.symlinkSync(source, linkPath);
+      const exportName = fileName.replace(/\.ts$/, '');
+      exportLines.push(`export * from './shared/${exportName}';`);
+    } catch (error) {
+      // Symlink creation may fail on some platforms. Keep the CLI non-fatal.
+    }
+  }
+
+  return exportLines;
+}
+
+function generateIndex(exportLines = []) {
+  ensureDir(LOCAL_TYPES_DIR);
+  const content = [
+    '// ARQUIVO GERADO AUTOMATICAMENTE. NÃO EDITE MANUALMENTE.',
+    ...exportLines,
+    '',
+  ].join('\n');
+  fs.writeFileSync(INDEX_FILE, content);
+}
 
 // Cores para terminal
 const colors = {
@@ -43,7 +135,7 @@ function log(msg, type = 'info') {
     error: colors.red,
     security: colors.magenta
   };
-  console.log(`${colorMap[type] || colors.white}[1ntruder]${colors.reset} ${msg}`);
+  console.log(`[AtomicCLI] ${msg}`);
 }
 
 function showBanner() {
@@ -189,6 +281,13 @@ async function main() {
 // Export functions for testing
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
+    ensureDir,
+    findFiles,
+    harvestTypes,
+    linkTypes,
+    generateIndex,
+    SRC_DIR,
+    GLOBAL_SHARED_PATH,
     log,
     showBanner,
     securityCheck,

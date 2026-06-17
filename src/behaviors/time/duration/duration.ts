@@ -1,4 +1,4 @@
-import { Brand, STAMP } from "../../../src/semantic/shim";
+import { Brand, STAMP } from "../../../semantic/shim";
 
 export type Duration = Brand<number, "time.duration">;
 
